@@ -1020,7 +1020,7 @@ def is_valid(entry: str) -> bool:
         if char == letter: letter_count += 1
     return letter_count >= x and letter_count <= y
 
-# entry is valid if 'password' has 'letter' in positions 'x' and 'y'
+# entry is valid if 'password' has 'letter' in positions 'x' and 'y' but not both
 def is_valid2(entry: str) -> bool:
     x, y, letter, password = get_fields(entry)
     return xor(password[x-1] == letter, password[y-1] == letter)
