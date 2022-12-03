@@ -2,7 +2,7 @@
 
 Here you'll find the solutions of some problems of the website [Advent Of Code](https://adventofcode.com/)
 
-Those solutions are made in diferent programming languages.
+Those solutions are made in different programming languages.
 
 ## 2020
 ### Info
