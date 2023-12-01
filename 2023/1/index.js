@@ -1,28 +1,23 @@
-const calibrationDocument = `1abc2
-pqr3stu8vwx
-a1b2c3d4e5f
-treb7uchet`
-
 const extractCalibrationValue = (text) => {
 	const chars = text.split('')
-	let result = ''
+	const numericChars = chars.filter(char => '0123456789'.includes(char));
+	const firstNumericChar = numericChars[0]
+	const lastNumericChar = numericChars[numericChars.length - 1]
 
-	for (char of chars) {
-		const isNumber = !isNaN(char);
-		if (isNumber) {
-			result = result + char
-		}
-	}
-
-	return Number(result)
+	return Number(`${firstNumericChar}${lastNumericChar}`)
 }
 
-const main = () => {
+const main = (input) => {
 	console.log(
-		calibrationDocument.split('\n')
+		input.split('\n')
 		.map(extractCalibrationValue)
 		.reduce((total, calibrationValue) => total + calibrationValue)
 	)
 }
 
-main();
+const exampleInput = `1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet`
+
+main(exampleInput);
