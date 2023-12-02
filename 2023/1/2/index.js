@@ -5,13 +5,26 @@ const extractDigitsFromWords = (text) => {
 	}
 
 	// Replace occurences to digits
-	let textWithDigits = ''
+	let textWithDigits = text
 	Object.keys(numberWords).forEach((numberWord, number) => {
-		textWithDigits = text.replace(numberWord, number)
+		textWithDigits = textWithDigits.replace(numberWord, `${numberWord}${number}`)
+		/* console.log({
+			numberWord,
+			number,
+			text,
+			textWithDigits,
+		}) */
 	})
 
 	const chars = textWithDigits.split('')
 	const digits = chars.filter(char => '0123456789'.includes(char))
+
+	console.log({
+		text,
+		textWithDigits,
+		digits
+
+	})
 
 	return digits
 }
@@ -26,7 +39,17 @@ const extractCalibrationValue = (text) => {
 	const firstNumericChar = numericChars[0]
 	const lastNumericChar = numericChars[numericChars.length - 1]
 
-	return Number(`${firstNumericChar}${lastNumericChar}`)
+	const calibrationValue = Number(`${firstNumericChar}${lastNumericChar}`)
+
+	console.log({
+		text,
+		numericChars,
+		firstNumericChar,
+		lastNumericChar,
+		calibrationValue,
+	})
+
+	return calibrationValue
 }
 
 const main = (input) => {
@@ -46,4 +69,4 @@ zoneight234
 
 const puzzleInput = require('fs').readFileSync('./input.txt').toString().trim()
 
-console.log(main(puzzleInput)); // exampleInput sum should be '281'
+console.log(main(exampleInput)); // exampleInput sum should be '281'
