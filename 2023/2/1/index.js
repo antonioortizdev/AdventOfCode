@@ -1,3 +1,24 @@
+const COLORS = ['red', 'green', 'blue']
+
+/**
+ * Generates empty cubes info object.
+ *
+ * @returns Empty cubes info. Example:
+ * 	{
+ * 		'red': 0,
+ * 		'green': 0,
+ * 		'blue': 0,
+ * 	}
+ */
+function generateEmptyCubesInfo() {
+	return COLORS.reduce((cubesInfo, color) => {
+		const result = cubesInfo
+		result[color] = 0
+
+		return result
+	}, {})
+}
+
 /**
  * Parses the input to obtain a list of games information.
  *
@@ -14,8 +35,12 @@
 				},
 				{
 					'red': 5,
+					'green': 0,
+					'blue': 0,
 				},
 				{
+					'red': 2,
+					'green': 0,
 					'blue': 7,
 				},
 				...
@@ -36,7 +61,7 @@ function parseGamesInfo(input) {
 
 		const gameCubes = []
 		gameTextInfo.trim().split(';').forEach(cubesTextInfo => {
-			const cubesByColor = {}
+			const cubesByColor = generateEmptyCubesInfo()
 			cubesTextInfo.trim().split(',').forEach(cubeTextInfo => {
 				const cubeQtyAndColor = cubeTextInfo.trim().split(' ');
 				const quantity = Number(cubeQtyAndColor[0].trim())
@@ -55,8 +80,26 @@ function parseGamesInfo(input) {
 	return result;
 }
 
-function isGamePossible(game, bagLoad) {
+function isGamePossible({ cubes }, bagLoad) {
+	const sumCubes = cubes.reduce((sumByColor, cubesByColor) => {
+		const result = sumByColor
+		Object.entries(sumByColor).forEach(([color, quantity]) => {
+			result[color] = cubesByColor[color] + quantity
+		})
 
+		return result;
+	}, generateEmptyCubesInfo())
+
+	console.log({
+		sumCubes, bagLoad
+	})
+	for ([color, quantity] of Object.entries(bagLoad)) {
+		if (sumCubes[color] > quantity) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 function main(input) {
@@ -65,10 +108,21 @@ function main(input) {
 		'green': 13,
 		'blue': 14,
 	}
-	const games = parseGamesInfo(input)
-	console.log({input, games})
-	const possibleGames = games.filter(game => isGamePossible(game, BAG_LOAD))
+	const games = parseGamesInfo(input).map(game => ({
+		...game,
+		isPossible: isGamePossible(game, BAG_LOAD)
+	}))
+	const possibleGames = games.filter(({ isPossible }) => isPossible === true)
+	const impossibleGames = games.filter(({ isPossible }) => isPossible === false)
 	const gameIdSum = possibleGames.map(game => game.id).reduce((sum, id) => sum + id)
+
+	require('fs').writeFileSync('./games.json', JSON.stringify({
+		gamesCount: games.length,
+		possibleGamesCount: possibleGames.length,
+		impossibleGamesCount: impossibleGames.length,
+		possibleGames,
+		impossibleGames,
+	}))
 
 	return gameIdSum
 }
@@ -82,5 +136,6 @@ Game 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green`;
 
 console.log('RESULT', {
 	exampleInput1: main(exampleInput1),
-	result: main(puzzleInput)
+	result: main(puzzleInput),
+	// 208 is too low...
 })
