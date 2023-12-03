@@ -1,32 +1,29 @@
 const extractDigitsFromWords = (text) => {
+	let digits = [];
 	const numberWords = {
-		'zero': 0, 'one': 1, 'two': 2, 'three': 3, 'four': 4,
+		'one': 1, 'two': 2, 'three': 3, 'four': 4,
 		'five': 5, 'six': 6, 'seven': 7, 'eight': 8, 'nine': 9
-	}
+	};
+	const numbers = '123456789';
 
-	// Replace occurences to digits
-	let textWithDigits = text
-	Object.keys(numberWords).forEach((numberWord, number) => {
-		textWithDigits = textWithDigits.replace(numberWord, `${numberWord}${number}`)
-		/* console.log({
-			numberWord,
-			number,
-			text,
-			textWithDigits,
-		}) */
+	// Find digits.
+	Array.from(text).forEach((char, index) => {
+		if (numbers.includes(char)) {
+			digits[index] = char
+		}
 	})
 
-	const chars = textWithDigits.split('')
-	const digits = chars.filter(char => '0123456789'.includes(char))
-
-	console.log({
-		text,
-		textWithDigits,
-		digits
-
+	// Add number words to respective indexes in digits array.
+	Object.entries(numberWords).forEach(([ numberWord, number ]) => {
+		const numberWordIndexes = [...text.matchAll(new RegExp(numberWord, 'gi'))].map(a => a.index)
+		numberWordIndexes.forEach(index => {
+			digits[index] = String(number)
+		})
 	})
 
-	return digits
+	const filteredDigits = digits.filter(digitOrEmpty => digitOrEmpty != undefined)
+
+	return filteredDigits
 }
 
 const extractCalibrationValue = (text) => {
@@ -41,14 +38,6 @@ const extractCalibrationValue = (text) => {
 
 	const calibrationValue = Number(`${firstNumericChar}${lastNumericChar}`)
 
-	console.log({
-		text,
-		numericChars,
-		firstNumericChar,
-		lastNumericChar,
-		calibrationValue,
-	})
-
 	return calibrationValue
 }
 
@@ -59,7 +48,12 @@ const main = (input) => {
 	return totalValues
 }
 
-const exampleInput = `two1nine
+const exampleInput1 = `1abc2
+pqr3stu8vwx
+a1b2c3d4e5f
+treb7uchet`
+
+const exampleInput2 = `two1nine
 eightwothree
 abcone2threexyz
 xtwone3four
@@ -69,4 +63,27 @@ zoneight234
 
 const puzzleInput = require('fs').readFileSync('./input.txt').toString().trim()
 
-console.log(main(exampleInput)); // exampleInput sum should be '281'
+// TESTS.
+console.log('TESTS', {
+	'': main(''),
+	' ': main(' '),
+	'1': main('1'),
+	'11': main('11'),
+	'0': main('0'),
+	'a': main('a'),
+	'zerone': main('zerone'),
+	'zerozero': main('zerozero'),
+	'twone': main('twone'),
+	'oneeight3': main('oneeight3'),
+	'oneoneone': main('oneoneone'),
+	exampleInput1: main(exampleInput1), // must return 142.
+	exampleInput2: main(exampleInput2), // must return 281.
+	result: main(puzzleInput)
+})
+
+// RESULTS.
+console.log('RESULTS', {
+	exampleInput1: main(exampleInput1), // must return 142.
+	exampleInput2: main(exampleInput2), // must return 281.
+	result: main(puzzleInput)
+});
