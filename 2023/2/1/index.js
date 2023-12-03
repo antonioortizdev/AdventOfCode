@@ -81,21 +81,11 @@ function parseGamesInfo(input) {
 }
 
 function isGamePossible({ cubes }, bagLoad) {
-	const sumCubes = cubes.reduce((sumByColor, cubesByColor) => {
-		const result = sumByColor
-		Object.entries(sumByColor).forEach(([color, quantity]) => {
-			result[color] = cubesByColor[color] + quantity
-		})
-
-		return result;
-	}, generateEmptyCubesInfo())
-
-	console.log({
-		sumCubes, bagLoad
-	})
-	for ([color, quantity] of Object.entries(bagLoad)) {
-		if (sumCubes[color] > quantity) {
-			return false;
+	for (cubesByColor of cubes) {
+		for ([color, quantity] of Object.entries(cubesByColor)) {
+			if (quantity > bagLoad[color]) {
+				return false
+			}
 		}
 	}
 
