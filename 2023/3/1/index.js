@@ -78,4 +78,5 @@ const puzzleInput = require('fs').readFileSync('./input.txt').toString().trim();
 console.log('RESULT', {
 	exampleInput1: main(exampleInput),
 	result: main(puzzleInput),
+	// 527626 is wrong.
 })
