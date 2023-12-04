@@ -13,6 +13,10 @@ function getPartNumbersFromSchematicMatrix(schematicMatrix) {
 		for (let j = 0; j < schematicMatrix[i].length; j++) {
 			if ('0123456789'.includes(schematicMatrix[i][j])) {
 				digits = digits + schematicMatrix[i][j]
+				if ('312' === digits) console.log('312', {
+					isPartNumber,
+					digits
+				})
 				const positionOffsets = [
 					[-1,-1],[-1,0],[-1,1],
 					[0,-1],       [0,1],
@@ -28,9 +32,12 @@ function getPartNumbersFromSchematicMatrix(schematicMatrix) {
 
 							return hasSymbol
 						}
-
 						return false
 					});
+
+					if (isPartNumber && schematicMatrix[i][j + 1] === undefined) {
+						partNumbers.push(Number(digits))
+					}
 				}
 
 			} else {
@@ -40,7 +47,6 @@ function getPartNumbersFromSchematicMatrix(schematicMatrix) {
 				digits = ''
 				isPartNumber = false
 			}
-
 		}
 	}
 
@@ -52,7 +58,7 @@ function main(input) {
 	const partNumbers = getPartNumbersFromSchematicMatrix(schematicMatrix)
 	const partNumbersSum = partNumbers.reduce((sum, partNumber) => sum + partNumber, 0)
 
-	console.log({schematicMatrix, partNumbers, partNumbersSum})
+	require('fs').writeFileSync('output.json', JSON.stringify({schematicMatrix, partNumbers, partNumbersSum}))
 
 	return partNumbersSum
 }
@@ -71,5 +77,5 @@ const puzzleInput = require('fs').readFileSync('./input.txt').toString().trim();
 
 console.log('RESULT', {
 	exampleInput1: main(exampleInput),
-	//result: main(puzzleInput),
+	result: main(puzzleInput),
 })
