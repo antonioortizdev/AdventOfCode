@@ -34,10 +34,6 @@ function getPartNumbersFromSchematicMatrix(schematicMatrix) {
 						}
 						return false
 					});
-
-					if (isPartNumber && schematicMatrix[i][j + 1] === undefined) {
-						partNumbers.push(Number(digits))
-					}
 				}
 
 			} else {
@@ -46,6 +42,9 @@ function getPartNumbersFromSchematicMatrix(schematicMatrix) {
 				}
 				digits = ''
 				isPartNumber = false
+			}
+			if (j === schematicMatrix[i].length - 1 && isPartNumber) {
+				partNumbers.push(Number(digits))
 			}
 		}
 	}
@@ -78,5 +77,4 @@ const puzzleInput = require('fs').readFileSync('./input.txt').toString().trim();
 console.log('RESULT', {
 	exampleInput1: main(exampleInput),
 	result: main(puzzleInput),
-	// 527626 is wrong.
 })
