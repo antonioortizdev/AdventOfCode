@@ -5,13 +5,20 @@ const exampleInput = `3   4
 3   9
 3   3`;
 
+const fs = require('fs');
+const path = require('path');
+
+const inputPath = path.join(__dirname, 'input.txt');
+const fileInput = fs.readFileSync(inputPath, 'utf-8');
+console.log(fileInput)
+
 const parseInput = (input) => {
 	const col1 = []
 	const col2 = [];
-	const pairsStrs = exampleInput.split('\n');
+	const pairsStrs = input.split('\n');
 	for (const pairStr of pairsStrs) {
-		const num1 = pairStr.charAt(0);
-		const num2 = pairStr.charAt(pairStr.length-1)
+		const num1 = pairStr.substring(0, pairStr.indexOf(' '));
+		const num2 = pairStr.substring(pairStr.indexOf(' ') + 2, pairStr.length)
 		col1.push(parseInt(num1))
 		col2.push(parseInt(num2))
 	}
@@ -42,4 +49,5 @@ const main = (input) => {
 
 console.log({
 	'main(exampleInput)': main(exampleInput),
+	'main(fileInput)': main(fileInput)
 })
